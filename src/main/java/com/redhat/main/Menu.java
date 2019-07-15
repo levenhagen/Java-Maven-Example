@@ -1,5 +1,6 @@
 package com.redhat.main;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Menu {
@@ -7,26 +8,26 @@ public class Menu {
 	private Scanner scanner;
 	private Company company;
 	
-	private int currentOption;
+	private String currentOption;
 	
 	public Menu(Company c) {
 		scanner = new Scanner(System.in);
 		this.company = c;
-		currentOption = 100; //default
+		currentOption = ""; //default
 	}
 	
 	public void runMenu() {
+		
+		//Init Message
 		System.out.println(String.format("======= Menu of Company %s has started =======", company.getName()));
 		
-		showInfoToUser();
-		
-		//loop/iterations through options
-		while(currentOption != 0) { //boolean
+		//Loop/interaction with user
+		while(!(currentOption.equals("0"))) { //boolean
 			handleUserInput();
 		}
-
+		
+		//scanner.close();
 	}
-	
 	
 	/**
 	 * 
@@ -35,41 +36,55 @@ public class Menu {
 	 * Shows the user how to manage options.
 	 * 
 	 * **/
-	
 	private void showInfoToUser() {
 		System.out.println(""
 				+ "1. Insert an Employee.\n"
 				+ "2. Edit an Employee\n"
 				+ "3. Remove an Employee\n"
 				+ "4. List an Employee\n"
-				+ "0. to exit.");
+				+ "5. List all Employees\n"
+				+ "0. To exit.");
 	}
 
 	private void handleUserInput() {
-		System.out.println("Pick an option:");
-		currentOption = scanner.nextInt();
+		System.out.println("========= MAIN MENU =========");
+		showInfoToUser();
+		System.out.println("Pick an option:");	
+		
+		currentOption = scanner.next();
+		
 		switch(currentOption) {
-			case 1:
-				System.out.println("You picked "+ currentOption + ". Inserting Employee.");
-				//Create Employee
+			case "1":
+				System.out.println("You picked "+ currentOption + ". Insert Employee.");
+				company.addEmployee();
+				currentOption = "";
 				break;
-			case 2:
-				System.out.println("You picked "+ currentOption + ". Listing Employee.");
-				//Read Employee
+			case "2":
+				System.out.println("You picked "+ currentOption + ". Edit Employee.");
+				company.editEmployee();
+				currentOption = "";
 				break;
-			case 3:
-				System.out.println("You picked "+ currentOption + ". Editing Employee.");
-				//Update Employee
+			case "3":
+				System.out.println("You picked "+ currentOption + ". Remove Employee.");
+				company.removeEmployee();
+				currentOption = "";
 				break;
-			case 4:
-				System.out.println("You picked "+ currentOption + ". Removing Employee.");
-				//Delete Employee
+			case "4":
+				System.out.println("You picked "+ currentOption + ". List Employee.");
+				company.listEmployee();
+				currentOption = "";
 				break;
-			case 0:
+			case "5":
+				System.out.println("You picked "+ currentOption + ". List Employees.");
+				company.listEmployees();
+				currentOption = "";
+				break;
+			case "0":
 				System.out.println("You picked "+ currentOption + ". System is shutting down...");
 				break;
 			default:
-				System.out.println("Wtf you picked dude?!");
+				System.out.println("Unrecognized option. Please try again...");
+				currentOption = "";
 				break;
 		}
 	}

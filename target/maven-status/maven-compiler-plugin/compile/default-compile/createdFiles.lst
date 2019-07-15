@@ -1,4 +1,10 @@
 com/redhat/main/Menu.class
-com/redhat/main/Employee.class
+com/redhat/main/JuniorDev.class
 com/redhat/main/Company.class
+com/redhat/main/Checkable.class
 com/redhat/main/Main.class
+com/redhat/main/Employee.class
+com/redhat/main/Manager.class
+com/redhat/main/RegularDev.class
+com/redhat/main/Supervisor.class
+com/redhat/main/InputHandler.class

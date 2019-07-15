@@ -1,81 +1,27 @@
 package com.redhat.main;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Vector;
 
-public class Company {
+public class InputHandler {
+	Scanner scanner;
 	
-	private String name;
-	private Vector<Employee> employees;
-	private InputHandler handler;
-	
-	public Company() {
-		// TODO Auto-generated constructor stub
-		this.name = "**No name set.**";
-		employees = new Vector<Employee>();
-		handler = new InputHandler();
+	public InputHandler() {
+		scanner = new Scanner(System.in);
 	}
 	
-	public Company(String name) {
-		this.name = name;
-		employees = new Vector<Employee>();
-		handler = new InputHandler();
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * 
-	 * Helper methods.
-	 * 
-	 * Get, edit and show information about employees and manage employees on the data structure.
-	 * Functions names are very straight forward.
-	 * 
-	 */
-	
-	public void addEmployee(){
-		Employee e = handler.handleEmployeeCreation();
-		if (e != null) {
-			employees.add(e);
-			System.out.println("Employee registered succesfully!");
-		}else {
-			System.out.println("Returning to menu.");
-		}
-	}
-	
-	public void editEmployee() {
-		int index = handler.handleEmployeeEdit();
-		try {
-			Employee toBeEdited = employees.get(index);
-			editEmployeeHelper(toBeEdited);
-			
-		}
-		catch(ArrayIndexOutOfBoundsException e){
-			System.out.println("Employee not found.");
-		}
-		System.out.println("Returning to menu.");
-		
-	}
-
-	/**
-	 * Helper for editing employees 
-	 * @param toBeEdited (interface)
-	 */
-	private void editEmployeeHelper(Checkable toBeEdited) {
-		System.out.println("Alright, what type of employee is he/she now?");
-		System.out.println("1. Manager, 2. Supervisor, 3.Regular Dev, 4.Junior Dev");
-		Scanner scanner = new Scanner(System.in);
+	public Employee handleEmployeeCreation() {
+		System.out.println("What type of employee is he?");
+		System.out.println("1. Manager");
+		System.out.println("2. Supervisor");
+		System.out.println("3. Regular Dev");
+		System.out.println("4. Junior Dev");
+		System.out.println("Or type any character to return to the menu.");
 		String type = scanner.next();
 		switch(type) {
 			case "1":
 				Manager m = new Manager();
-
 				System.out.println("First Name:");
 				m.setFirstName(scanner.next());
 				scanner.nextLine(); //debug
@@ -92,13 +38,11 @@ public class Company {
 				catch(InputMismatchException e){
 					System.out.println("Salary could not be set.");
 				}
-				
-				toBeEdited = m;
-				break;
+				return m;
 				
 			case "2":
 				Supervisor s = new Supervisor();
-				
+
 				System.out.println("First Name:");
 				s.setFirstName(scanner.next());
 				scanner.nextLine(); //debug
@@ -121,12 +65,10 @@ public class Company {
 				System.out.println("Team:");
 				s.setTeam(scanner.nextLine());
 				
-				toBeEdited = s;
-				break;
+				return s;
 				
 			case "3":
 				RegularDev rd = new RegularDev();
-				
 				System.out.println("First Name:");
 				rd.setFirstName(scanner.next());
 				scanner.nextLine(); //debug
@@ -152,12 +94,9 @@ public class Company {
 				String aux = scanner.next();
 				rd.setLanguages(aux.split(","));
 				
-				toBeEdited = rd;
-				break;
-				
+				return rd;
 			case "4":
 				JuniorDev jd = new JuniorDev();
-
 				System.out.println("First Name:");
 				jd.setFirstName(scanner.next());
 				scanner.nextLine(); //debug
@@ -182,36 +121,39 @@ public class Company {
 				System.out.println("Programming Languages: (Type languages separated by commas. Example: Java, C, ... . If none, type 'None'");
 				String aux2 = scanner.next();
 				jd.setLanguages(aux2.split(","));
-
-				toBeEdited = jd;
-				break;
+				return jd;
 			default:
-				break;
-			}
-		//scanner.close();
+				return null;
+		}
 	}
 
-	public void removeEmployee() {
-		int index = handler.handleEmployeeRemove();
-		try {
-			employees.remove(index);
-		}
-		catch(ArrayIndexOutOfBoundsException e) {
-			System.out.println("Employee not found.");
-		}
+	public int handleEmployeeEdit() {
+		System.out.println("Which employee?");
+		int index = scanner.nextInt();
+		return index-1;
 	}
 	
-	public void listEmployees() {
-		handler.handleEmployeesList(employees);
+	public int handleEmployeeRemove() {
+		System.out.println("Which employee?");
+		int index = scanner.nextInt();
+		return index-1;
 	}
 	
-	public void listEmployee() {
-		int index = handler.handleEmployeeList(employees);
-		try {
-			employees.get(index).checkRegistry();
-		}
-		catch(ArrayIndexOutOfBoundsException e) {
-			System.out.println("Could not find employee.");
+	//one specific employee
+	public int handleEmployeeList(Vector<Employee> employees) {
+		System.out.println("Which employee?");
+		int index = scanner.nextInt();
+		return index-1;
+		
+	}
+	
+	//all employees
+	public void handleEmployeesList(Vector<Employee> employees) {
+		if(employees.size()==0) System.out.println("No employees registered yet.");
+		else {
+			for (Employee e : employees) {
+				System.out.println(employees.indexOf(e)+1 + ". " + e.getFirstName());
+			}
 		}
 	}
 }
